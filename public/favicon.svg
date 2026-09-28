@@ -1,0 +1,158 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Magnifier Ring Gradient: Cyan -> Blue -> Purple -> Hot Pink -->
+    <linearGradient id="mag-ring-grad" x1="15%" y1="10%" x2="90%" y2="90%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="35%" stop-color="#3B82F6" />
+      <stop offset="70%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+
+    <!-- Cyan Folder Edge Gradient -->
+    <linearGradient id="cyan-edge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="100%" stop-color="#00C8FF" />
+    </linearGradient>
+
+    <!-- Folder Body Gradient -->
+    <linearGradient id="folder-body-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0D1B2E" />
+      <stop offset="100%" stop-color="#060C17" />
+    </linearGradient>
+
+    <!-- Envelope Gradient -->
+    <linearGradient id="env-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" />
+      <stop offset="100%" stop-color="#0099DD" />
+    </linearGradient>
+
+    <!-- Purple Card Gradient -->
+    <linearGradient id="purple-card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#6D28D9" />
+    </linearGradient>
+
+    <!-- Subtle Glow Filter -->
+    <filter id="cyan-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#00F0FF" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <g transform="translate(45, 30)">
+    <!-- ==================== 1. THICK BLACK OUTER SILHOUETTE (STICKER) ==================== -->
+    <g stroke="#000000" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="#000000">
+      <!-- Envelope Silhouette -->
+      <path d="M 68 145 L 180 88 C 196 80 216 88 224 104 L 260 176 C 268 192 260 212 244 220 L 132 277 C 116 285 96 277 88 261 L 52 189 C 44 173 52 153 68 145 Z" />
+      <!-- Paper Silhouette -->
+      <rect x="180" y="40" width="220" height="260" rx="26" />
+      <!-- Purple Card Silhouette -->
+      <path d="M 330 140 L 442 85 C 458 77 478 84 486 100 L 520 170 C 528 186 521 206 505 214 L 393 269 C 377 277 357 270 349 254 L 315 184 C 307 168 314 148 330 140 Z" />
+      <!-- Folder Silhouette Base -->
+      <path d="M 45 280 C 45 235 75 220 115 220 L 205 220 C 230 220 250 240 268 260 L 285 275 C 298 285 315 285 330 285 L 485 285 C 525 285 550 310 550 350 L 550 490 C 550 535 525 560 480 560 L 115 560 C 70 560 45 535 45 490 Z" />
+      <!-- Magnifier Handle Silhouette -->
+      <line x1="430" y1="455" x2="485" y2="510" stroke-width="48" stroke-linecap="round" />
+    </g>
+
+    <!-- ==================== 2. BACKGROUND ITEMS PEEKING OUT ==================== -->
+    <!-- Left: Angled Cyan Envelope -->
+    <g transform="translate(150, 185) rotate(-27)">
+      <rect x="-85" y="-60" width="170" height="120" rx="16" fill="url(#env-grad)" stroke="#000000" stroke-width="12" />
+      <!-- Flap Lines -->
+      <path d="M -85 -60 L 0 5 L 85 -60" fill="none" stroke="#000000" stroke-width="10" stroke-linejoin="round" />
+      <path d="M -85 60 L -30 10" fill="none" stroke="#000000" stroke-width="9" />
+      <path d="M 85 60 L 30 10" fill="none" stroke="#000000" stroke-width="9" />
+    </g>
+
+    <!-- Right: Angled Purple Document/Card -->
+    <g transform="translate(425, 175) rotate(26)">
+      <rect x="-70" y="-85" width="140" height="170" rx="18" fill="url(#purple-card-grad)" stroke="#000000" stroke-width="12" />
+      <!-- Two White Pill Stripes -->
+      <rect x="-42" y="-40" width="84" height="16" rx="8" fill="#FFFFFF" />
+      <rect x="-42" y="-10" width="84" height="16" rx="8" fill="#FFFFFF" />
+    </g>
+
+    <!-- Center: Clean White Document with folded corner and text lines -->
+    <g transform="translate(195, 45)">
+      <!-- Main Paper Body with Dog-ear fold cutout -->
+      <path d="M 0 0 H 135 L 185 50 V 230 C 185 242 175 252 163 252 H 22 C 10 252 0 242 0 230 Z" fill="#FFFFFF" stroke="#000000" stroke-width="12" stroke-linejoin="round" />
+      <!-- Folded Dog-ear flap -->
+      <path d="M 135 0 V 50 H 185 Z" fill="#E2E8F0" stroke="#000000" stroke-width="10" stroke-linejoin="round" />
+      <!-- Text Lines -->
+      <rect x="28" y="70" width="70" height="12" rx="6" fill="#0F172A" />
+      <rect x="28" y="98" width="128" height="12" rx="6" fill="#0F172A" />
+      <rect x="28" y="126" width="128" height="12" rx="6" fill="#0F172A" />
+      <rect x="28" y="154" width="95" height="12" rx="6" fill="#0F172A" />
+    </g>
+
+    <!-- ==================== 3. FRONT FOLDER CONTAINER ==================== -->
+    <!-- Folder Body Base -->
+    <path d="M 45 285 C 45 242 72 225 110 225 L 195 225 C 220 225 240 242 258 260 L 275 277 C 288 290 306 295 325 295 L 485 295 C 522 295 548 318 548 355 L 548 485 C 548 528 522 555 480 555 L 110 555 C 68 555 45 528 45 485 Z" 
+          fill="url(#folder-body-grad)" 
+          stroke="#000000" 
+          stroke-width="14" 
+          stroke-linejoin="round" />
+
+    <!-- Vibrant Cyan Neon Inset Border around the Folder Front -->
+    <path d="M 62 295 C 62 260 82 245 112 245 L 192 245 C 212 245 228 258 244 274 L 263 293 C 278 307 298 314 320 314 L 478 314 C 506 314 528 332 528 362 L 528 478 C 528 510 506 534 474 534 L 114 534 C 82 534 62 510 62 478 Z" 
+          fill="none" 
+          stroke="url(#cyan-edge-grad)" 
+          stroke-width="12" 
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          filter="url(#cyan-glow)" />
+
+    <!-- ==================== 4. EMBLEMS ON FOLDER ==================== -->
+    <!-- LEFT: Shield with Solid White Padlock -->
+    <g transform="translate(100, 325)">
+      <!-- Glowing Cyan Shield Outline -->
+      <path d="M 75 18 C 105 18 135 6 135 6 C 135 6 142 62 122 108 C 105 146 75 168 75 168 C 75 168 45 146 28 108 C 8 62 15 6 15 6 C 15 6 45 18 75 18 Z" 
+            fill="#061224" 
+            stroke="#00F0FF" 
+            stroke-width="11" 
+            stroke-linejoin="round"
+            filter="url(#cyan-glow)" />
+
+      <!-- Inner White Padlock -->
+      <g transform="translate(75, 96)">
+        <!-- Padlock Shackle -->
+        <path d="M -18 -8 V -24 C -18 -34 -10 -42 0 -42 C 10 -42 18 -34 18 -24 V -8" 
+              fill="none" 
+              stroke="#FFFFFF" 
+              stroke-width="9" 
+              stroke-linecap="round" />
+        <!-- Padlock Body -->
+        <rect x="-26" y="-8" width="52" height="42" rx="8" fill="#FFFFFF" stroke="#000000" stroke-width="4" />
+        <!-- Padlock Keyhole -->
+        <circle cx="0" cy="8" r="4.5" fill="#091322" />
+        <path d="M -2.5 8 L 2.5 8 L 4 20 L -4 20 Z" fill="#091322" />
+      </g>
+    </g>
+
+    <!-- RIGHT: Stylized Magnifying Glass with Neon Cyan->Magenta Gradient -->
+    <g transform="translate(370, 410)">
+      <!-- Magenta Handle with Black Outline -->
+      <line x1="52" y1="52" x2="112" y2="112" 
+            stroke="#000000" 
+            stroke-width="36" 
+            stroke-linecap="round" />
+      <line x1="52" y1="52" x2="112" y2="112" 
+            stroke="#FF007F" 
+            stroke-width="24" 
+            stroke-linecap="round" />
+      <!-- Handle Highlight -->
+      <line x1="58" y1="58" x2="98" y2="98" 
+            stroke="#FF77C2" 
+            stroke-width="6" 
+            stroke-linecap="round" />
+
+      <!-- Magnifier Circular Ring Outer Black Border -->
+      <circle cx="0" cy="0" r="76" fill="#081426" stroke="#000000" stroke-width="28" />
+
+      <!-- Magnifier Gradient Rim -->
+      <circle cx="0" cy="0" r="76" fill="none" stroke="url(#mag-ring-grad)" stroke-width="18" filter="url(#cyan-glow)" />
+
+      <!-- Inner Lens Reflection -->
+      <path d="M -42 -28 C -30 -48 -8 -58 18 -54" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.75" />
+    </g>
+  </g>
+</svg>

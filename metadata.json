@@ -1,0 +1,7 @@
+{
+  "name": "myDocAnizer-Light",
+  "description": "Cross-Platform Desktop Companion & Encrypted Local Document Vault for myDocAnizer (Compose Multiplatform Desktop style)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
