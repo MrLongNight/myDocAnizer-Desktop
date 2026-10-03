@@ -1,4 +1,4 @@
-name: Build Multi-Platform Release
+name: Build release bundles
 
 on:
   push:
@@ -7,38 +7,24 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g. v1.0.0)'
+        description: Release version (for example v1.0.0)
         required: true
-        default: 'v1.0.0'
+        default: v1.0.0
 
 jobs:
   build:
-    name: Build ${{ matrix.os_name }} release
+    name: Build ${{ matrix.name }} bundle
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            os_name: linux
-            archive_ext: tar.gz
-            archive_cmd: |
-              mkdir -p release
-              tar -czf release/myDocAnizer-Desktop-${VERSION}-linux-x64.tar.gz -C dist .
+            name: linux
           - os: macos-latest
-            os_name: macos
-            archive_ext: zip
-            archive_cmd: |
-              mkdir -p release
-              cd dist
-              zip -r ../release/myDocAnizer-Desktop-${VERSION}-macos-universal.zip .
-              cd ..
+            name: macos
           - os: windows-latest
-            os_name: windows
-            archive_ext: zip
-            archive_cmd: |
-              New-Item -ItemType Directory -Force -Path release | Out-Null
-              Compress-Archive -Path dist\* -DestinationPath "release\myDocAnizer-Desktop-${VERSION}-windows-x64.zip" -Force
+            name: windows
 
     env:
       VERSION: ${{ github.ref_name || github.event.inputs.version }}
@@ -47,41 +33,48 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '18'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm install --no-fund --no-audit
+        run: bun install --frozen-lockfile
 
       - name: Type check
-        run: npm run lint
+        run: bun run lint
 
       - name: Build app
-        run: npm run build
+        run: bun run build
 
-      - name: Package release archive
+      - name: Package Linux release
+        if: matrix.name == 'linux'
         shell: bash
         run: |
           mkdir -p release
-          if [ "${{ matrix.os_name }}" = "linux" ]; then
-            tar -czf "release/myDocAnizer-Desktop-${VERSION}-linux-x64.tar.gz" -C dist .
-          elif [ "${{ matrix.os_name }}" = "macos" ]; then
-            cd dist
-            zip -r "../release/myDocAnizer-Desktop-${VERSION}-macos-universal.zip" .
-            cd ..
-          else
-            powershell -NoProfile -ExecutionPolicy Bypass -Command "Compress-Archive -Path dist\* -DestinationPath \"release\myDocAnizer-Desktop-${VERSION}-windows-x64.zip\" -Force"
-          fi
+          tar -czf "release/myDocAnizer-Desktop-${VERSION}-linux-x64.tar.gz" -C dist .
+
+      - name: Package macOS release
+        if: matrix.name == 'macos'
+        shell: bash
+        run: |
+          mkdir -p release
+          cd dist
+          zip -r "../release/myDocAnizer-Desktop-${VERSION}-macos-universal.zip" .
+          cd ..
+
+      - name: Package Windows release
+        if: matrix.name == 'windows'
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Compress-Archive -Path ".\dist\*" -DestinationPath ".\release\myDocAnizer-Desktop-${env:VERSION}-windows-x64.zip" -Force
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: myDocAnizer-Desktop-${{ matrix.os_name }}
+          name: myDocAnizer-Desktop-${{ matrix.name }}
           path: release/
-          if-no-files-found: error
           retention-days: 30
 
   release:
@@ -89,6 +82,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
 
     steps:
       - name: Download artifacts
@@ -96,57 +91,16 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Collect release files
+        shell: bash
+        run: |
+          mkdir -p final-release
+          find release-artifacts -type f -exec cp {} final-release/ \;
+          ls -lh final-release
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: myDocAnizer Desktop ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          body: |
-            # myDocAnizer Desktop ${{ github.ref_name }}
-
-            Cross-platform release bundle for Windows, macOS and Linux.
-
-            ## Included files
-            - Windows: `myDocAnizer-Desktop-${{ github.ref_name }}-windows-x64.zip`
-            - macOS: `myDocAnizer-Desktop-${{ github.ref_name }}-macos-universal.zip`
-            - Linux: `myDocAnizer-Desktop-${{ github.ref_name }}-linux-x64.tar.gz`
-
-            ## Installation
-            - Extract the archive and run the app from the extracted folder.
-            - For macOS, copy the app to `/Applications` if needed.
-            - For Linux, extract and run the binary or launcher from the folder.
-
-      - name: Upload Windows asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release-artifacts/myDocAnizer-Desktop-windows/myDocAnizer-Desktop-${{ github.ref_name }}-windows-x64.zip
-          asset_name: myDocAnizer-Desktop-${{ github.ref_name }}-windows-x64.zip
-          asset_content_type: application/zip
-
-      - name: Upload macOS asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release-artifacts/myDocAnizer-Desktop-macos/myDocAnizer-Desktop-${{ github.ref_name }}-macos-universal.zip
-          asset_name: myDocAnizer-Desktop-${{ github.ref_name }}-macos-universal.zip
-          asset_content_type: application/zip
-
-      - name: Upload Linux asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release-artifacts/myDocAnizer-Desktop-linux/myDocAnizer-Desktop-${{ github.ref_name }}-linux-x64.tar.gz
-          asset_name: myDocAnizer-Desktop-${{ github.ref_name }}-linux-x64.tar.gz
-          asset_content_type: application/gzip
+          files: |
+            final-release/*
+          generate_release_notes: true
